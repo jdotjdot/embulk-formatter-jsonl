@@ -17,12 +17,14 @@ Format datum to jsonl, 1 json per 1 line
     - CR: use `\r`(0x0d) as newline character
     - NUL: use `\0`(0x00) instead of newline (for example, `xargs -0` will be good friend with it)
     - NO: dump JSONs in a line
+    - COMMA: print `,\n` for use in a regular JSON output (not JSONL)
 - **date_format**: date format. See below example. (string default: nil)
     - "yyyy-MM-dd HH:mm:ss": 2015-04-26 17:23:25
     - "yyyy-MM-dd'T'HH:mm:ss.SSSZ": 2015-04-26T17:23:25.123+0900
     - For more information: [SimpleDateFormat class document](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
 - **timezone**: timezone. "JST" (string default: nil), When you use this option, you also need to set date_format option too.
 - **json_columns**: json formatted column name. (array default:[])
+- **as_json**: output as JSON rather than as jsonl (meaning as an array of JSON objects)
 
 ## Example
 
