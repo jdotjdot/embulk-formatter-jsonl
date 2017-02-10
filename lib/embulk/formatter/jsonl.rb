@@ -1,4 +1,5 @@
 require 'jrjackson'
+require 'pry'
 
 module Embulk
   module Formatter
@@ -55,7 +56,7 @@ module Embulk
         @encoding = task['encoding'].upcase
         @newline = NEWLINES[task['newline'].upcase]
         @json_columns = task["json_columns"]
-        @max_file_size = task["max_file_size"].to_i
+        @max_file_size = task["max_file_size"].to_f
 
         @as_json = task["as_json"]
         @header_print = true
@@ -76,8 +77,8 @@ module Embulk
       def add(page)
         # output code:
         page.each do |record|
-          puts @current_file_size
-          if @current_file == nil || @current_file_size > 32*1024
+
+          if @current_file == nil || @current_file_size > (@max_file_size * 1024 * 1024)
             if @as_json and @current_file != nil
               # if we're at the end of an existing file, print the footer
               @current_file.write ']'.encode(@encoding)
@@ -98,7 +99,10 @@ module Embulk
           @schema.each do |col|
             datum[col.name] = @json_columns.include?(col.name) ? JrJackson::Json.load(record[col.index]) : record[col.index]
           end
-          @current_file.write "#{JrJackson::Json.dump(datum, @opts )}#{@newline}".encode(@encoding)
+
+          outline = "#{JrJackson::Json.dump(datum, @opts )}#{@newline}".encode(@encoding)
+          @current_file_size += outline.bytesize
+          @current_file.write outline
         end
       end
 
