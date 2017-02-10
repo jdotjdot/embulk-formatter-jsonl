@@ -34,7 +34,7 @@ module Embulk
           'timezone' => config.param('timezone', :string, default: nil ),
           'json_columns' => config.param("json_columns", :array,  default: []),
           'max_file_size' => config.param("max_file_size", :string, default: 32),
-          'as_json' => config.param("as_json", :boolean, default: false)
+          'as_json' => config.param("as_json", :bool, default: false)
         }
 
         if task['as_json']
