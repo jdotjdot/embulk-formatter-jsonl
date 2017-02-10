@@ -14,6 +14,9 @@ module Embulk
         # following are not jsonl, but useful in some case
         'NUL' => "\0",
         'NO' => '',
+
+        # Custom additions to enable non-jsonl style formatting
+        'COMMA' => ",\n",
       }
 
       def self.join_texts((*inits,last), opt = {})
@@ -29,7 +32,8 @@ module Embulk
           'newline' => config.param('newline', :string, default: 'LF'),
           'date_format' => config.param('date_format', :string, default: nil),
           'timezone' => config.param('timezone', :string, default: nil ),
-          'json_columns' => config.param("json_columns", :array,  default: [])
+          'json_columns' => config.param("json_columns", :array,  default: []),
+          'max_file_size' => config.param("max_file_size", :string, default: 32)
         }
 
         encoding = task['encoding'].upcase
@@ -46,6 +50,7 @@ module Embulk
         @encoding = task['encoding'].upcase
         @newline = NEWLINES[task['newline'].upcase]
         @json_columns = task["json_columns"]
+        @max_file_size = task["max_file_size"].to_i
 
         # your data
         @current_file == nil
@@ -63,7 +68,7 @@ module Embulk
       def add(page)
         # output code:
         page.each do |record|
-          if @current_file == nil || @current_file_size > 32*1024
+          if @current_file == nil || @current_file_size > @max_file_size*1024
             @current_file = file_output.next_file
             @current_file_size = 0
           end
