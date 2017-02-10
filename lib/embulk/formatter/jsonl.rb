@@ -76,6 +76,7 @@ module Embulk
       def add(page)
         # output code:
         page.each do |record|
+          puts @current_file_size
           if @current_file == nil || @current_file_size > 32*1024
             if @as_json and @current_file != nil
               # if we're at the end of an existing file, print the footer
