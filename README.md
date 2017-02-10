@@ -25,6 +25,7 @@ Format datum to jsonl, 1 json per 1 line
 - **timezone**: timezone. "JST" (string default: nil), When you use this option, you also need to set date_format option too.
 - **json_columns**: json formatted column name. (array default:[])
 - **as_json**: output as JSON rather than as jsonl (meaning as an array of JSON objects)
+- **max_file_size**: max file size in MiB as float
 
 ## Example
 
