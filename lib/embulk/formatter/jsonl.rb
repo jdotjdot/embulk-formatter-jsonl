@@ -1,5 +1,4 @@
 require 'jrjackson'
-require 'pry'
 
 module Embulk
   module Formatter
